@@ -1,0 +1,1 @@
+// Widget browser component placeholder
