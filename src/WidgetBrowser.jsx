@@ -1,6 +1,7 @@
 // Flutter Widget Browser - Interactive Web App (Mobile + Desktop Responsive)
 import { useState } from "react";
 import Card from "./components/Card";
+import CardContent from "./components/CardContent";
 import Input from "./components/Input";
 import Button from "./components/Button";
 import { Tabs, TabsList, TabsTrigger } from "./components/Tabs";
