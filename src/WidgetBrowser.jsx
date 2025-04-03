@@ -1,8 +1,8 @@
 // Flutter Widget Browser - Interactive Web App (Mobile + Desktop Responsive)
 import { useState } from "react";
-import Card from "/components/Card";
-import Input from "components/Input";
-import Button from "/components/Button";
+import Card from "./components/Card";
+import Input from "./components/Input";
+import Button from "./components/Button";
 import { Tabs, TabsList, TabsTrigger } from "/components/Tabs";
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
