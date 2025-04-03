@@ -1,9 +1,4 @@
 
 export default function Input({ className = '', ...props }) {
-  return (
-    <input
-      className={`w-full border rounded px-3 py-2 text-sm shadow-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white ${className}`}
-      {...props}
-    />
-  );
+  return <input className={`w-full border px-3 py-2 rounded text-sm bg-white dark:bg-zinc-800 text-black dark:text-white ${className}`} {...props} />;
 }

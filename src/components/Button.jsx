@@ -1,9 +1,9 @@
 
 export default function Button({ children, variant = 'default', size = 'md', ...props }) {
-  const base = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none";
+  const base = "inline-flex items-center justify-center rounded text-sm font-medium transition-colors";
   const variants = {
     default: "bg-blue-600 text-white hover:bg-blue-700",
-    outline: "border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white",
+    outline: "border border-gray-300 text-gray-800 dark:text-white",
     ghost: "bg-transparent hover:bg-gray-100 dark:hover:bg-zinc-800",
   };
   const sizes = {
