@@ -82,7 +82,7 @@ ${w.example}
 \`\`\`
 📍 ${w.placement[lang]}
 `
-    ).join("
+    ).join("\n---\n\n")
 ---
 
 ");
