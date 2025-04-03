@@ -74,19 +74,15 @@ export default function WidgetBrowser() {
   const exportMarkdown = () => {
     const markdown = filtered.map(w =>
       `### ${w.name[lang]}
-
-${w.description[lang]}
-
-\`\`\`dart
-${w.example}
-\`\`\`
-📍 ${w.placement[lang]}
-`
-    ).join("\\n---\\n\\n");
----
-
-");
-
+  
+  ${w.description[lang]}
+  
+  \`\`\`dart
+  ${w.example}
+  \`\`\`
+  📍 ${w.placement[lang]}`
+    ).join("\n---\n\n");
+  
     const blob = new Blob([markdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
