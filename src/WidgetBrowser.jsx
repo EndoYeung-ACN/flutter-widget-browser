@@ -121,6 +121,17 @@ MaterialApp / CupertinoApp
         ├── drawer                 → 側邊選單 / Side Drawer
         ├── bottomNavigationBar   → 底部導覽列 / Bottom Navigation Bar
         └── floatingActionButton  → 漂浮按鈕 / Floating Action Button
+`;
+
+MaterialApp / CupertinoApp
+  └── Scaffold
+        ├── AppBar                  → 頂部工具列 / Top App Bar
+        ├── body                    → 主畫面內容 / Main Content
+        │   └── Column / Row / Stack
+        │       └── Text, Button, Container, ...
+        ├── drawer                 → 側邊選單 / Side Drawer
+        ├── bottomNavigationBar   → 底部導覽列 / Bottom Navigation Bar
+        └── floatingActionButton  → 漂浮按鈕 / Floating Action Button
 \`;
 
 const TABLE = [
