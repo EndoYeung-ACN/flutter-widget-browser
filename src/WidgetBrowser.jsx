@@ -66,7 +66,7 @@ export default function WidgetBrowser() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-6 bg-background text-foreground transition-colors md:px-8 lg:px-12">
+    <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900 text-zinc-900 dark:text-white transition-colors md:px-8 lg:px-12">
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Flutter Widget Browser</h1>
@@ -88,7 +88,7 @@ export default function WidgetBrowser() {
         <Tabs value={filter} onValueChange={setFilter} className="mb-4">
           <TabsList className="overflow-x-auto whitespace-nowrap">
             {categories.map((cat) => (
-              <TabsTrigger key={cat} value={cat}>
+              <TabsTrigger key={cat} value={cat} onClick={() => setFilter(cat)}>
                 {cat}
               </TabsTrigger>
             ))}
@@ -103,23 +103,21 @@ export default function WidgetBrowser() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="bg-muted shadow-sm dark:bg-zinc-800">
-                <CardContent className="p-4">
+              <Card className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700">
+                <CardContent>
                   <h2 className="text-lg font-semibold mb-1">{widget.name}</h2>
-                  <p className="text-sm text-muted-foreground">{widget.description}</p>
-                  <pre className="bg-background border mt-3 p-3 rounded text-sm overflow-auto">
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300">{widget.description}</p>
+                  <pre className="bg-gray-100 dark:bg-zinc-700 mt-3 p-3 rounded text-sm overflow-auto text-zinc-800 dark:text-gray-100">
                     <code>{widget.example}</code>
                   </pre>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    📍 Placement: {widget.placement}
-                  </p>
+                  <p className="text-xs text-zinc-500 mt-2">📍 Placement: {widget.placement}</p>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
 
           {filteredWidgets.length === 0 && (
-            <p className="text-muted-foreground text-sm text-center">
+            <p className="text-zinc-400 text-sm text-center">
               No matching widgets found.
             </p>
           )}
