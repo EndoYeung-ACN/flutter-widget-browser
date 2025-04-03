@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "./components/Tabs";
 import { motion } from "framer-motion";
 import { Moon, Sun, Languages } from "lucide-react";
 
+// Widgets data for demo
 const WIDGETS = [
   {
     name: { zh: "ListTile", en: "ListTile" },
@@ -21,36 +22,34 @@ const WIDGETS = [
       zh: "放在 Scaffold > body 中的 ListView 或 Column",
       en: "Inside ListView or Column in Scaffold > body"
     }
-  },
-  {
-    name: { zh: "Container", en: "Container" },
-    category: "Layout",
-    description: {
-      zh: "結合繪圖、定位、尺寸等常用功能的容器元件。",
-      en: "A convenience widget that combines common painting, positioning, and sizing widgets."
-    },
-    example: "Container(padding: EdgeInsets.all(16), child: Text('Hello'))",
-    placement: {
-      zh: "放在 Scaffold > body 中的 Column、Row 或 Stack",
-      en: "Inside Column/Row/Stack in Scaffold > body"
-    }
-  },
-  {
-    name: { zh: "TextField", en: "TextField" },
-    category: "Form",
-    description: {
-      zh: "基本的文字輸入欄位。",
-      en: "A basic text input field."
-    },
-    example: "TextField(decoration: InputDecoration(labelText: 'Enter name'))",
-    placement: {
-      zh: "放在 Column 或 Form 中",
-      en: "Inside Form or Column in body"
-    }
   }
 ];
 
-const categories = ["All", "Layout", "Form", "List"];
+// 完整分類總覽資料
+const OVERVIEW = [
+  {
+    icon: "🧱",
+    title: { zh: "結構 / 畫面架構", en: "Structure / App Skeleton" },
+    widgets: [
+      { name: "Scaffold", zh: "頁面框架" },
+      { name: "AppBar", zh: "上方應用列" },
+      { name: "BottomNavigationBar", zh: "底部導覽列" },
+      { name: "TabBar", zh: "分頁列" }
+    ]
+  },
+  {
+    icon: "📐",
+    title: { zh: "佈局（Layout）", en: "Layout" },
+    widgets: [
+      { name: "Column", zh: "垂直排列" },
+      { name: "Row", zh: "水平排列" },
+      { name: "Expanded", zh: "彈性佔滿空間" },
+      { name: "Stack", zh: "疊加元件" }
+    ]
+  }
+];
+
+const categories = ["All", "Layout", "List"];
 
 export default function WidgetBrowser() {
   const [search, setSearch] = useState("");
@@ -74,15 +73,15 @@ export default function WidgetBrowser() {
   const exportMarkdown = () => {
     const markdown = filtered.map(w =>
       `### ${w.name[lang]}
-  
-  ${w.description[lang]}
-  
-  \`\`\`dart
-  ${w.example}
-  \`\`\`
-  📍 ${w.placement[lang]}`
+
+${w.description[lang]}
+
+\`\`\`dart
+${w.example}
+\`\`\`
+📍 ${w.placement[lang]}`
     ).join("\n---\n\n");
-  
+
     const blob = new Blob([markdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -95,6 +94,7 @@ export default function WidgetBrowser() {
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900 text-zinc-900 dark:text-white transition-colors md:px-8 lg:px-12">
       <div className="max-w-5xl mx-auto">
+        {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Flutter Widget Browser</h1>
           <div className="flex items-center gap-2">
@@ -110,6 +110,7 @@ export default function WidgetBrowser() {
           </div>
         </div>
 
+        {/* Search + Filter */}
         <Input
           placeholder={lang === "zh" ? "搜尋元件..." : "Search widgets..."}
           value={search}
@@ -129,7 +130,6 @@ export default function WidgetBrowser() {
                 {lang === "zh"
                   ? cat === "All" ? "全部" :
                     cat === "Layout" ? "佈局" :
-                    cat === "Form" ? "表單" :
                     cat === "List" ? "清單" : cat
                   : cat}
               </TabsTrigger>
@@ -137,6 +137,7 @@ export default function WidgetBrowser() {
           </TabsList>
         </Tabs>
 
+        {/* Filtered Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           {filtered.map((widget) => (
             <motion.div
@@ -159,11 +160,20 @@ export default function WidgetBrowser() {
           ))}
         </div>
 
-        {filtered.length === 0 && (
-          <p className="text-zinc-400 text-sm text-center mt-10">
-            {lang === "zh" ? "找不到相關元件。" : "No matching widgets found."}
-          </p>
-        )}
+        {/* Overview Block */}
+        <div className="mt-10 space-y-6">
+          {OVERVIEW.map(section => (
+            <div key={section.title.en}>
+              <h2 className="text-xl font-bold mb-2">{section.icon} {section.title[lang]}</h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+                {section.widgets.map(item => (
+                  <li key={item.name}>- {item.name} / {item.zh}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
