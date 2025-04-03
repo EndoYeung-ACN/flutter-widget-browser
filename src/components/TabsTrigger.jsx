@@ -1,1 +1,0 @@
-export default function Dummy({ children }) { return <div>{children}</div>; }
