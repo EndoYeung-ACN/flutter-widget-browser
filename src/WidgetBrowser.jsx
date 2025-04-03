@@ -8,24 +8,9 @@ import { Tabs, TabsList, TabsTrigger } from "./components/Tabs";
 import { motion } from "framer-motion";
 import { Moon, Sun, Languages } from "lucide-react";
 
-// Widgets data for demo
-const WIDGETS = [
-  {
-    name: { zh: "ListTile", en: "ListTile" },
-    category: "List",
-    description: {
-      zh: "一行固定高度的元件，通常包含文字或圖標。",
-      en: "A single fixed-height row that typically contains some text and/or icons."
-    },
-    example: "ListTile(title: Text('Item'), subtitle: Text('Details'), leading: Icon(Icons.star))",
-    placement: {
-      zh: "放在 Scaffold > body 中的 ListView 或 Column",
-      en: "Inside ListView or Column in Scaffold > body"
-    }
-  }
-];
+const categories = ["All", "Layout", "Form", "List"];
+const widgets = [];
 
-// 完整分類總覽資料
 const OVERVIEW = [
   {
     icon: "🧱",
@@ -33,147 +18,144 @@ const OVERVIEW = [
     widgets: [
       { name: "Scaffold", zh: "頁面框架" },
       { name: "AppBar", zh: "上方應用列" },
+      { name: "Drawer", zh: "抽屜式選單" },
       { name: "BottomNavigationBar", zh: "底部導覽列" },
-      { name: "TabBar", zh: "分頁列" }
+      { name: "TabBar / TabBarView", zh: "分頁導覽" },
+      { name: "MaterialApp / CupertinoApp", zh: "整體應用" },
     ]
   },
   {
     icon: "📐",
     title: { zh: "佈局（Layout）", en: "Layout" },
     widgets: [
-      { name: "Column", zh: "垂直排列" },
-      { name: "Row", zh: "水平排列" },
-      { name: "Expanded", zh: "彈性佔滿空間" },
-      { name: "Stack", zh: "疊加元件" }
+      { name: "Column / Row", zh: "垂直 / 水平排列" },
+      { name: "Expanded / Flexible", zh: "彈性空間" },
+      { name: "Padding / Align / Center", zh: "空間與對齊" },
+      { name: "Stack / Positioned", zh: "堆疊元素" },
+      { name: "SizedBox / ConstrainedBox", zh: "尺寸控制" },
+    ]
+  },
+  {
+    icon: "📦",
+    title: { zh: "容器與裝飾", en: "Container & Decoration" },
+    widgets: [
+      { name: "Container / Card", zh: "基礎容器" },
+      { name: "DecoratedBox / Material", zh: "裝飾容器" },
+      { name: "ClipRRect / ClipOval", zh: "裁切效果" },
+      { name: "BoxDecoration / Border", zh: "邊框與陰影" }
+    ]
+  },
+  {
+    icon: "🧾",
+    title: { zh: "文字與樣式", en: "Text & Style" },
+    widgets: [
+      { name: "Text / RichText", zh: "文字顯示" },
+      { name: "TextSpan / DefaultTextStyle", zh: "文字樣式" },
+      { name: "TextTheme", zh: "主題樣式" }
+    ]
+  },
+  {
+    icon: "🎨",
+    title: { zh: "圖片與媒體", en: "Images & Media" },
+    widgets: [
+      { name: "Image.asset / .network", zh: "圖片顯示" },
+      { name: "Icon / IconButton", zh: "圖標與按鈕" },
+      { name: "BackdropFilter / ShaderMask", zh: "圖像特效" }
+    ]
+  },
+  {
+    icon: "🔘",
+    title: { zh: "按鈕與互動", en: "Buttons & Interaction" },
+    widgets: [
+      { name: "Elevated / Text / IconButton", zh: "常用按鈕" },
+      { name: "GestureDetector / InkWell", zh: "點擊偵測" },
+      { name: "FloatingActionButton", zh: "浮動按鈕" }
+    ]
+  },
+  {
+    icon: "🖱",
+    title: { zh: "滑動與清單", en: "Scrolling & Lists" },
+    widgets: [
+      { name: "ListView / GridView", zh: "清單與網格" },
+      { name: "SingleChildScrollView", zh: "可滾動容器" },
+      { name: "ListTile / Dismissible", zh: "列表項目" }
+    ]
+  },
+  {
+    icon: "✍️",
+    title: { zh: "表單與輸入", en: "Form & Input" },
+    widgets: [
+      { name: "TextField / TextFormField", zh: "文字輸入欄" },
+      { name: "Checkbox / Radio / Switch", zh: "勾選選項" },
+      { name: "Slider / DatePicker", zh: "滑桿與日期" }
+    ]
+  },
+  {
+    icon: "🔄",
+    title: { zh: "動畫與資料處理", en: "Animation & Async" },
+    widgets: [
+      { name: "AnimatedContainer / Opacity", zh: "動畫過渡" },
+      { name: "FutureBuilder / StreamBuilder", zh: "非同步顯示" }
+    ]
+  },
+  {
+    icon: "🛠",
+    title: { zh: "工具型 Widget", en: "Utility Widgets" },
+    widgets: [
+      { name: "SafeArea / Builder", zh: "佈局與錯誤處理" },
+      { name: "Theme / MediaQuery", zh: "外觀控制" }
+    ]
+  },
+  {
+    icon: "🌙",
+    title: { zh: "iOS 風格（Cupertino）", en: "Cupertino" },
+    widgets: [
+      { name: "CupertinoButton / Switch", zh: "iOS 按鈕開關" },
+      { name: "CupertinoNavigationBar", zh: "iOS 導覽列" }
     ]
   }
 ];
 
-const categories = ["All", "Layout", "List"];
-
 export default function WidgetBrowser() {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
-  const [darkMode, setDarkMode] = useState(false);
   const [lang, setLang] = useState("zh");
-
-  const filtered = WIDGETS.filter(w => {
-    const matchSearch =
-      w.name[lang].toLowerCase().includes(search.toLowerCase()) ||
-      w.description[lang].toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter === "All" || w.category === filter;
-    return matchSearch && matchFilter;
-  });
+  const [darkMode, setDarkMode] = useState(false);
 
   const toggleDark = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark", !darkMode);
   };
 
-  const exportMarkdown = () => {
-    const markdown = filtered.map(w =>
-      `### ${w.name[lang]}
-
-${w.description[lang]}
-
-\`\`\`dart
-${w.example}
-\`\`\`
-📍 ${w.placement[lang]}`
-    ).join("\n---\n\n");
-
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "flutter_widgets.md";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900 text-zinc-900 dark:text-white transition-colors md:px-8 lg:px-12">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Flutter Widget Browser</h1>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={exportMarkdown}>
-              {lang === "zh" ? "匯出" : "Export"}
-            </Button>
+          <h1 className="text-2xl font-bold">Flutter Widget 分類總覽</h1>
+          <div className="flex gap-2">
             <Button variant="ghost" size="icon" onClick={toggleDark}>
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
             <Button variant="ghost" size="icon" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
-              <Languages className="h-5 w-5" />
+              <Languages className="w-5 h-5" />
             </Button>
           </div>
         </div>
 
-        {/* Search + Filter */}
-        <Input
-          placeholder={lang === "zh" ? "搜尋元件..." : "Search widgets..."}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="mb-4"
-        />
-
-        <Tabs value={filter}>
-          <TabsList>
-            {categories.map((cat) => (
-              <TabsTrigger
-                key={cat}
-                value={cat}
-                onClick={() => setFilter(cat)}
-                selected={filter === cat}
-              >
-                {lang === "zh"
-                  ? cat === "All" ? "全部" :
-                    cat === "Layout" ? "佈局" :
-                    cat === "List" ? "清單" : cat
-                  : cat}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-
-        {/* Filtered Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          {filtered.map((widget) => (
-            <motion.div
-              key={widget.name.en}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card>
-                <CardContent>
-                  <h2 className="text-lg font-semibold mb-1">{widget.name[lang]}</h2>
-                  <p className="text-sm text-zinc-700 dark:text-zinc-300">{widget.description[lang]}</p>
-                  <pre className="bg-gray-100 dark:bg-zinc-700 mt-3 p-3 rounded text-sm overflow-auto text-zinc-800 dark:text-gray-100">
-                    <code>{widget.example}</code>
-                  </pre>
-                  <p className="text-xs text-zinc-500 mt-2">📍 {widget.placement[lang]}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Overview Block */}
-        <div className="mt-10 space-y-6">
+        <div className="grid gap-6">
           {OVERVIEW.map(section => (
-            <div key={section.title.en}>
-              <h2 className="text-xl font-bold mb-2">{section.icon} {section.title[lang]}</h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-                {section.widgets.map(item => (
-                  <li key={item.name}>- {item.name} / {item.zh}</li>
-                ))}
-              </ul>
-            </div>
+            <Card key={section.title.en}>
+              <CardContent>
+                <h2 className="text-lg font-semibold mb-2">
+                  {section.icon} {section.title[lang]}
+                </h2>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-1 text-sm text-zinc-800 dark:text-zinc-200">
+                  {section.widgets.map(w => (
+                    <li key={w.name}>- {w.name} / {w.zh}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           ))}
         </div>
-
       </div>
     </div>
   );
